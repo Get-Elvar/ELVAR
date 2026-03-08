@@ -12,7 +12,7 @@ You don't need to be a programmer to use Elvar!
 
 1. **Download the App:** Go to the [Releases](../../releases) page and download the latest **Elvar Setup ZIP / EXE** file.
 2. **Install:** Extract the ZIP and run the installer.
-3. **Get the Extension:** Once Elvar is running, open the app, go to **Settings**, and follow the built-in instructions to install the companion Browser Extension.
+3. **Get the Extension:** Once Elvar is running, open the app, go to **Settings**, and follow the built-in instructions to install the companion Browser Extension.If somehow you cannot load extension from the application. Download the extension folder and load it directly from any chromuim browser.
 
 ---
 
