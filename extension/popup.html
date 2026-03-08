@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    :root {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --surface-hover: #2a2a2a;
+      --primary: #0A84FF;
+      --primary-hover: #0066CC;
+      --danger: #FF453A;
+      --danger-hover: #D70015;
+      --text: #ffffff;
+      --text-muted: #98989D;
+      --border: #333333;
+    }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      width: 340px; 
+      padding: 0; 
+      background: var(--bg); 
+      color: var(--text); 
+      margin: 0; 
+      overflow-x: hidden;
+    }
+    .header {
+      background: var(--surface);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header img { width: 24px; height: 24px; }
+    .header h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+    
+    .container { padding: 16px; }
+    
+    h3 { margin-top: 0; font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    button { 
+      width: 100%; 
+      padding: 10px; 
+      background: var(--primary); 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      font-size: 14px; 
+      transition: all 0.2s ease; 
+      margin-bottom: 8px; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    button:active { transform: translateY(1px); }
+    button.danger { background: var(--surface); color: var(--danger); border: 1px solid var(--border); }
+    button.danger:hover { background: var(--danger); color: white; border-color: var(--danger); }
+    
+    .msg { display: none; margin-top: 12px; text-align: center; font-size: 13px; font-weight: 500; padding: 8px; border-radius: 6px; animation: slideIn 0.3s ease; }
+    .success { background: rgba(52, 199, 89, 0.1); color: #30D158; border: 1px solid rgba(52, 199, 89, 0.2); }
+    .error { background: rgba(255, 69, 58, 0.1); color: #FF453A; border: 1px solid rgba(255, 69, 58, 0.2); }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .tab-list { 
+      max-height: 140px; 
+      overflow-y: auto; 
+      margin-bottom: 16px; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      background: var(--surface);
+    }
+    .tab-list::-webkit-scrollbar { width: 6px; }
+    .tab-list::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+    
+    .tab-item { 
+      display: flex; 
+      align-items: center; 
+      padding: 8px 12px; 
+      font-size: 13px; 
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .tab-item:last-child { border-bottom: none; }
+    .tab-item:hover { background: var(--surface-hover); }
+    .tab-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+    .tab-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .section { margin-bottom: 24px; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    select, input[type="text"] { 
+      width: 100%; 
+      padding: 10px 12px; 
+      margin-bottom: 12px; 
+      background: var(--surface); 
+      color: white; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      box-sizing: border-box;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    select:focus, input[type="text"]:focus { outline: none; border-color: var(--primary); }
+    
+    .workflows { 
+      max-height: 160px; 
+      overflow-y: auto; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
+    }
+    .workflows::-webkit-scrollbar { width: 6px; }
+    .workflows::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+    
+    .wf-btn { 
+      background: var(--surface); 
+      color: var(--text); 
+      padding: 12px; 
+      font-size: 14px; 
+      text-align: left; 
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wf-btn:hover { background: var(--surface-hover); border-color: #555; transform: none; }
+    .wf-btn::after { content: '▶'; font-size: 10px; color: var(--primary); opacity: 0; transition: opacity 0.2s; }
+    .wf-btn:hover::after { opacity: 1; }
+    
+    /* Toggle Switch */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .toggle-label { font-size: 13px; font-weight: 500; }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #39393D;
+      transition: .3s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(18px); }
+    
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-radius: 0;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+      border-bottom: 2px solid transparent;
+    }
+    .tab-btn:hover { background: transparent; color: var(--text); transform: none; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icon.png" alt="Elvar">
+    <h2>Elvar Companion</h2>
+  </div>
+  
+  <div class="tabs-header">
+    <button class="tab-btn active" id="tabSave">Save Tabs</button>
+    <button class="tab-btn" id="tabLaunch">Launch</button>
+  </div>
+
+  <div class="container">
+    <div id="contentSave" class="tab-content active">
+      <input type="text" id="tabSearch" placeholder="Search tabs..." style="margin-bottom: 8px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <button id="selectAllTabs" style="width: 48%; padding: 6px; font-size: 12px; background: var(--surface); border: 1px solid var(--border);">Select All</button>
+        <button id="deselectAllTabs" style="width: 48%; padding: 6px; font-size: 12px; background: var(--surface); border: 1px solid var(--border);">Deselect All</button>
+      </div>
+      <div class="tab-list" id="tabList"></div>
+      <div class="toggle-row">
+        <span class="toggle-label" id="saveTypeLabel">Save as Session</span>
+        <label class="switch">
+          <input type="checkbox" id="saveTypeToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row" id="protectedToggleRow" style="display: none;">
+        <span class="toggle-label">Save as Protected</span>
+        <label class="switch">
+          <input type="checkbox" id="isProtectedToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <select id="targetSelect" style="display: none;">
+        <option value="_new_workflow">Create New Workflow</option>
+      </select>
+      <input type="text" id="sessionName" placeholder="Session Name (optional)">
+      <button id="sendBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        Save Selected Tabs
+      </button>
+      <button id="saveCloseBtn" class="danger">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        Save & Close Tabs
+      </button>
+      <button id="closeBtn" class="danger" style="margin-top: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        Close Selected Tabs
+      </button>
+    </div>
+    
+    <div id="contentLaunch" class="tab-content">
+      <div class="toggle-row">
+        <span class="toggle-label">Incognito Mode</span>
+        <label class="switch">
+          <input type="checkbox" id="extIncognito">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Force New Window</span>
+        <label class="switch">
+          <input type="checkbox" id="extNewWindow">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <h3 style="margin-top: 16px;">Workflows</h3>
+      <div class="workflows" id="wfList">
+        <p style="text-align:center; margin: 20px 0; color: var(--text-muted); font-size: 13px;">Loading workflows...</p>
+      </div>
+      
+      <h3 style="margin-top: 16px;">Protected Workflows</h3>
+      <div class="workflows" id="protectedWfList">
+        <p style="text-align:center; margin: 20px 0; color: var(--text-muted); font-size: 13px;">Loading workflows...</p>
+      </div>
+    </div>
+
+    <div id="msg" class="msg"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
